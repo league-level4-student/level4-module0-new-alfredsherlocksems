@@ -28,7 +28,7 @@ public class EncapsulateTheDataTest {
 
         int randomPositiveNum = new Random().nextInt(100 + 1);
 
-        testData.setItemsReceived(randomPositiveNum);
+        testData.setItemsRecieved(randomPositiveNum);
 
         assertEquals(randomPositiveNum, testData.getItemsReceived());
 
@@ -39,7 +39,7 @@ public class EncapsulateTheDataTest {
 
         int randomNegativeNum = new Random().nextInt(100) - 100;
 
-        testData.setItemsReceived(randomNegativeNum);
+        testData.setItemsRecieved(randomNegativeNum);
 
         assertEquals(0, testData.getItemsReceived());
 
@@ -94,9 +94,9 @@ public class EncapsulateTheDataTest {
 
         String randomString = new Random().nextInt() + "";
 
-        testData.setNomenclature(randomString);
+        testData.setNoMenClature(randomString);
 
-        assertEquals(randomString, testData.getNomenclature());
+        assertEquals(randomString, testData.getNoMenClature());
 
     }
 
@@ -105,9 +105,9 @@ public class EncapsulateTheDataTest {
 
         String blankString = "";
 
-        testData.setNomenclature(blankString);
+        testData.setNoMenClature(blankString);
 
-        assertEquals(" ", testData.getNomenclature());
+        assertEquals(" ", testData.getNoMenClature());
 
     }
 
