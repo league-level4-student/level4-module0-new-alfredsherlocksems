@@ -8,6 +8,7 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import _06_Card_Game.Card.Rank;
@@ -22,14 +23,17 @@ public class CardDealer implements ActionListener {
     Random ran = new Random();
     ArrayList<Card> player  = new ArrayList<Card>();
     ArrayList<Card> dealer = new ArrayList<Card>();
-    JFrame frame = new JFrame();
-    JPanel panel = new JPanel();
+    JFrame frame;
+    JPanel panel;
     JButton hit = new JButton();
     JButton stand = new JButton();
     JLabel card1 = new JLabel();
     JLabel card2 = new JLabel();
+    String card2Text;
     
     public void setup() {
+    	frame = new JFrame();
+    	panel = new JPanel();
     	frame.setVisible(true);
     	frame.setSize(400, 400);
     	frame.add(panel);
@@ -39,11 +43,14 @@ public class CardDealer implements ActionListener {
     	stand.setText("stand");
     	hit.addActionListener(this);
     	stand.addActionListener(this);
+    	panel.add(card1);
+    	panel.add(card2);
+    	frame.pack();
     }
     
     public void makeDeck() {
     	for (int i = 0; i < 4; i++) {
-        	for (int j = 1; j <= ranks.length; j++) {
+        	for (int j = 0; j < ranks.length; j++) {
         		card = new Card(ranks[j], suit[i]);
         		deck.add(card);
         	}
@@ -67,25 +74,34 @@ public class CardDealer implements ActionListener {
     	dealer.add(deck.get(1));
     	player.add(deck.get(2));
     	dealer.add(deck.get(3));
-    	
+    	while (getDealerTotal() < 17) {
+    		shuffle();
+    		dealer.add(deck.get(0));
+    	}
+    	if (getDealerTotal() > 21) {
+    		winChecker();
+    	}
     	//card1.setText(player.get(0).getSuit() + " " + player.get(0).getRank());
     	cardDisplay(player.get(0), card1);
     	cardDisplay(player.get(1), card2);
-    	
     	frame.pack();
     }
     
     public void winChecker() {
-    	int dealerTotal = 0;
-    	for (int i = 0; i < dealer.size(); i++) {
-    		dealerTotal+=dealer.get(i).getRank().getValue();
+    	if (getDealerTotal() > 21) {
+    		JOptionPane.showMessageDialog(null, "You win with " + getPlayerTotal() + "! The dealer had " + getDealerTotal());
     	}
-    	if (getPlayerTotal() > dealerTotal) {
-    		
+    	else if (getPlayerTotal() > 21) {
+    		JOptionPane.showMessageDialog(null, "You lose with " + getPlayerTotal() + "! The dealer had " + getDealerTotal());
+    	}
+    	else if(getPlayerTotal() > getDealerTotal()) {
+    		JOptionPane.showMessageDialog(null, "You win with " + getPlayerTotal() + "! The dealer had " + getDealerTotal());
     	}
     	else {
-    		
+    		JOptionPane.showMessageDialog(null, "You lose with " + getPlayerTotal() + "! The dealer had " + getDealerTotal());
     	}
+    	frame.repaint();
+    	setup();
     }
     
     public void cardDisplay(Card card, JLabel label) {
@@ -99,6 +115,14 @@ public class CardDealer implements ActionListener {
     		playerTotal+=player.get(i).getRank().getValue();
     	}
     	return playerTotal;
+    }
+    
+    public int getDealerTotal() {
+    	int dealerTotal = 0;
+    	for (int i = 0; i < dealer.size(); i++) {
+    	dealerTotal+=dealer.get(i).getRank().getValue();
+    	}
+    	return dealerTotal;
     }
     public static void main (String [] args) {
     	CardDealer play = new CardDealer();
@@ -114,9 +138,10 @@ public class CardDealer implements ActionListener {
 		if (arg0.getSource() == hit) {
 			shuffle();
 			player.add(deck.get(0));
-			
+			card2Text = card2.getText();
+			card2.setText(card2Text + " " + deck.get(0).getSuit() + " " + deck.get(0).getRank());
 		}
-		else if (arg0.getSource() == stand) {
+		if (arg0.getSource() == stand || getPlayerTotal() > 21) {
 			winChecker();
 		}
 		frame.pack();
